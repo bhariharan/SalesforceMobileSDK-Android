@@ -28,6 +28,9 @@ package com.salesforce.androidsdk.app;
 
 import java.net.URI;
 
+import us.costan.chrome.ChromeCookieManager;
+import us.costan.chrome.ChromeView;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -44,7 +47,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
-import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.salesforce.androidsdk.auth.AccountWatcher;
@@ -268,6 +270,7 @@ public class SalesforceSDKManager implements AccountRemoved {
 	 * @param context Application context.
 	 */
     public static void initInternal(Context context) {
+    	ChromeView.initialize(context);
 
     	// Applies PRNG fixes for certain older versions of Android.
         PRNGFixes.apply();
@@ -567,7 +570,7 @@ public class SalesforceSDKManager implements AccountRemoved {
 
         // Clears cookies.
         CookieSyncManager.createInstance(context);
-        CookieManager.getInstance().removeAllCookie();
+        ChromeCookieManager.getInstance().removeAllCookie();
 
         // Restarts the application.
         final Intent i = new Intent(context, getMainActivityClass());

@@ -29,7 +29,7 @@ package com.salesforce.samples.contactexplorer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.webkit.WebView;
+import us.costan.chrome.ChromeView;
 
 import com.salesforce.androidsdk.app.SalesforceSDKManager;
 import com.salesforce.androidsdk.auth.HttpAccess;
@@ -94,7 +94,7 @@ public class ContactExplorerTest extends HybridInstrumentationTestCase {
 		assertEquals("record should be an " + expectedType, expectedType, record.getJSONObject("attributes").getString("type"));
 	}
 
-    private void sendClick(WebView webView, String target) {
+    private void sendClick(ChromeView webView, String target) {
 		sendJavaScript(webView, "jQuery('" + target + "').trigger('click')");
 	}
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <WebView
+    <us.costan.chrome.ChromeView
         android:id="@+id/sf__oauth_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

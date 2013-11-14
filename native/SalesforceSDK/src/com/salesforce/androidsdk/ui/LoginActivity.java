@@ -28,6 +28,8 @@ package com.salesforce.androidsdk.ui;
 
 import java.util.Locale;
 
+import us.costan.chrome.ChromeView;
+
 import android.accounts.AccountAuthenticatorActivity;
 import android.app.Activity;
 import android.content.Intent;
@@ -37,7 +39,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.salesforce.androidsdk.app.SalesforceSDKManager;
@@ -92,7 +93,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements OAuth
         loadSeparator = findViewById(salesforceR.idLoadSeparator());
 
 		// Setup the WebView.
-		WebView webView = (WebView) findViewById(salesforceR.idLoginWebView());
+		ChromeView webView = (ChromeView) findViewById(salesforceR.idLoginWebView());
 		webView.getSettings().setSavePassword(false);
 		EventsObservable.get().notifyEvent(EventType.AuthWebViewCreateComplete, webView);
 		webviewHelper = getOAuthWebviewHelper(this, loginOptions, webView, savedInstanceState);
@@ -104,7 +105,7 @@ public class LoginActivity extends AccountAuthenticatorActivity implements OAuth
 		webviewHelper.loadLoginPage();
 	}
 
-	protected OAuthWebviewHelper getOAuthWebviewHelper(OAuthWebviewHelperEvents callback, LoginOptions loginOptions, WebView webView, Bundle savedInstanceState) {
+	protected OAuthWebviewHelper getOAuthWebviewHelper(OAuthWebviewHelperEvents callback, LoginOptions loginOptions, ChromeView webView, Bundle savedInstanceState) {
 		return new OAuthWebviewHelper(callback, loginOptions, webView, savedInstanceState);
 	}
 
@@ -114,7 +115,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements OAuth
 	protected void onResume() {
 		super.onResume();
 		if (wasBackgrounded) {
-			webviewHelper.clearView();
 			webviewHelper.loadLoginPage();
 			wasBackgrounded = false;
 		}

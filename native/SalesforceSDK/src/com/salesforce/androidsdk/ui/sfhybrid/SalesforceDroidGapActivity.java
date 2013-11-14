@@ -42,16 +42,18 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import us.costan.chrome.ChromeCookieManager;
+import us.costan.chrome.ChromeSettings;
+import us.costan.chrome.ChromeView;
+import us.costan.chrome.ChromeViewClient;
+
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.salesforce.androidsdk.app.SalesforceSDKManager;
 import com.salesforce.androidsdk.auth.HttpAccess.NoNetworkException;
@@ -143,7 +145,7 @@ public class SalesforceDroidGapActivity extends DroidGap {
         super.init(webView, new SalesforceGapViewClient(this, webView), webChromeClient);
         final String uaStr = SalesforceSDKManager.getInstance().getUserAgent();
         if (null != this.appView) {
-            WebSettings webSettings = this.appView.getSettings();
+            ChromeSettings webSettings = this.appView.getSettings();
             String origUserAgent = webSettings.getUserAgentString();
             final String extendedUserAgentString = uaStr + " Hybrid " + (origUserAgent == null ? "" : origUserAgent);
             webSettings.setUserAgentString(extendedUserAgentString);
@@ -382,14 +384,14 @@ public class SalesforceDroidGapActivity extends DroidGap {
      */
     private static void setVFCookies(URI instanceUrl) {
     	if (instanceUrl != null) {
-        	final WebView view = new WebView(SalesforceSDKManager.getInstance().getAppContext());
+        	final ChromeView view = new ChromeView(SalesforceSDKManager.getInstance().getAppContext());
         	view.setVisibility(View.GONE);
-        	view.setWebViewClient(new WebViewClient() {
+        	view.setChromeViewClient(new ChromeViewClient() {
 
         		@Override
-        		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        		public boolean shouldOverrideUrlLoading(ChromeView view, String url) {
                 	final CookieSyncManager cookieSyncMgr = CookieSyncManager.getInstance();
-                    final CookieManager cookieMgr = CookieManager.getInstance();
+                    final ChromeCookieManager cookieMgr = ChromeCookieManager.getInstance();
                     cookieMgr.setAcceptCookie(true);
                     cookieSyncMgr.sync();
         			return true;
@@ -462,7 +464,7 @@ public class SalesforceDroidGapActivity extends DroidGap {
    private void setSidCookies() {
        Log.i("SalesforceDroidGapActivity.setSidCookies", "setting cookies");
        CookieSyncManager cookieSyncMgr = CookieSyncManager.getInstance();
-       CookieManager cookieMgr = CookieManager.getInstance();
+       ChromeCookieManager cookieMgr = ChromeCookieManager.getInstance();
        cookieMgr.setAcceptCookie(true);  // Required to set additional cookies that the auth process will return.
        cookieMgr.removeSessionCookie();
        SystemClock.sleep(250); // removeSessionCookies kicks out a thread - let it finish
@@ -477,7 +479,7 @@ public class SalesforceDroidGapActivity extends DroidGap {
        cookieSyncMgr.sync();
    }
 
-   private void addSidCookieForDomain(CookieManager cookieMgr, String domain, String sid) {
+   private void addSidCookieForDomain(ChromeCookieManager cookieMgr, String domain, String sid) {
        String cookieStr = "sid=" + sid;
        cookieMgr.setCookie(domain, cookieStr);
    }    

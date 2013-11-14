@@ -26,13 +26,13 @@
  */
 package com.salesforce.androidsdk.util;
 
+import us.costan.chrome.ChromeView;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 
 import com.salesforce.androidsdk.app.SalesforceSDKManager;
 import com.salesforce.androidsdk.ui.LoginActivity;
@@ -116,7 +116,7 @@ public class ForceAppInstrumentationTestCase extends InstrumentationTestCase {
 	}
 
 	protected void login() {
-		WebView loginWebView = (WebView) waitForEvent(EventType.AuthWebViewCreateComplete).getData();
+		ChromeView loginWebView = (ChromeView) waitForEvent(EventType.AuthWebViewCreateComplete).getData();
 		loginActivity = (LoginActivity) waitForEvent(EventType.LoginActivityCreateComplete).getData();
 		waitForEvent(EventType.AuthWebViewPageFinished);
 		sendJavaScript(loginWebView, "document.login.un.value='" + getTestUsername() + "';document.login.password.value='" + getTestPassword() + "';document.login.submit();"); // login
@@ -156,7 +156,7 @@ public class ForceAppInstrumentationTestCase extends InstrumentationTestCase {
         }
     }
 	
-	protected void sendJavaScript(final WebView webView, final String js) {
+	protected void sendJavaScript(final ChromeView webView, final String js) {
     	try {
 			runTestOnUiThread(new Runnable() {
 				@Override

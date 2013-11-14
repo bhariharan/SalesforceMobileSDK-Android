@@ -12,7 +12,8 @@
         android:resizeable="true"
         android:anyDensity="true" />
 
-    <uses-sdk android:minSdkVersion="8" />
+    <uses-sdk android:minSdkVersion="14"
+        android:targetSdkVersion="17" />
 
     <application android:label="@string/app_name"
         android:name=".VFConnectorApp"

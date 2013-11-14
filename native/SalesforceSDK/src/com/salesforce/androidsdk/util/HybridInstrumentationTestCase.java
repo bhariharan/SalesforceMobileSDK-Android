@@ -26,8 +26,8 @@
  */
 package com.salesforce.androidsdk.util;
 
+import us.costan.chrome.ChromeView;
 import android.util.Log;
-import android.webkit.WebView;
 
 import com.salesforce.androidsdk.util.EventsListenerQueue.BlockForEvent;
 import com.salesforce.androidsdk.util.EventsObservable.Event;
@@ -39,7 +39,7 @@ import com.salesforce.androidsdk.util.EventsObservable.EventType;
 public abstract class HybridInstrumentationTestCase extends ForceAppInstrumentationTestCase {
 	
 	protected static String HYBRID_CONTAINER = "hybridContainer";
-	protected WebView gapWebView;
+	protected ChromeView gapWebView;
 	
 	protected void login() {
 		super.login();
@@ -57,7 +57,7 @@ public abstract class HybridInstrumentationTestCase extends ForceAppInstrumentat
 			@Override
 			public void run(Event evt) {
 				Log.i("HybridInstrumentationTestCase.prepareBridge", "addingJavaScriptInterfacce hybridContainer");
-				gapWebView = (WebView) evt.getData();
+				gapWebView = (ChromeView) evt.getData();
 				gapWebView.addJavascriptInterface(new Object() {
 					@SuppressWarnings("unused")
 					public void send(String msg) {
@@ -69,7 +69,7 @@ public abstract class HybridInstrumentationTestCase extends ForceAppInstrumentat
 		});
 	 }
 
-	protected void interceptExistingJavaScriptFunction(WebView webView, String functionName) {
+	protected void interceptExistingJavaScriptFunction(ChromeView webView, String functionName) {
 		sendJavaScript(gapWebView, "var old" + functionName + "=" +  functionName);
 		sendJavaScript(gapWebView, functionName + " = function() { console.log(\"Intercepting " + functionName + "\"); " + HYBRID_CONTAINER + ".send(JSON.stringify(arguments)); old" + functionName + ".apply(null, arguments)}");
 	}

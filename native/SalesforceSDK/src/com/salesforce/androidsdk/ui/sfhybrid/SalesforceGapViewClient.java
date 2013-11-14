@@ -36,13 +36,14 @@ import org.apache.cordova.CordovaWebViewClient;
 import org.apache.cordova.api.CordovaInterface;
 import org.apache.http.HttpStatus;
 
+import us.costan.chrome.ChromeView;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.util.Log;
-import android.webkit.WebView;
 
 import com.salesforce.androidsdk.util.EventsObservable;
 import com.salesforce.androidsdk.util.EventsObservable.EventType;
@@ -76,7 +77,7 @@ public class SalesforceGapViewClient extends CordovaWebViewClient {
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(final WebView view, String url) {
+    public boolean shouldOverrideUrlLoading(final ChromeView view, String url) {
         String startURL = isLoginRedirect(url);
         if (startURL != null) {
         	((SalesforceDroidGapActivity) ctx).refresh(startURL);
@@ -114,7 +115,7 @@ public class SalesforceGapViewClient extends CordovaWebViewClient {
      * @param url           The url of the page.
      */
     @Override
-    public void onPageFinished(WebView view, String url) {
+    public void onPageFinished(ChromeView view, String url) {
         // The first URL that's loaded that's not one of the URLs used in the bootstrap process will
         // be considered the "app home URL", which can be loaded directly in the event that the app is offline.
         if (!this.foundHomeUrl && !isReservedUrl(url)) {

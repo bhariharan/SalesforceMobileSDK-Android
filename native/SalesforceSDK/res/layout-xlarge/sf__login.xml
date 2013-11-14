@@ -26,7 +26,7 @@
 
                 <View style="@style/SalesforceSDK.ServerPicker.Spacer" />
 
-                <WebView
+                <us.costan.chrome.ChromeView
                     android:id="@+id/sf__oauth_webview"
                     android:layout_width="@dimen/sf__login_webview_width"
                     android:layout_height="match_parent"

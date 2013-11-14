@@ -26,7 +26,7 @@
  */
 package com.salesforce.samples.smartstoreexplorer;
 
-import android.webkit.WebView;
+import us.costan.chrome.ChromeView;
 
 import com.salesforce.androidsdk.smartstore.app.SalesforceSDKManagerWithSmartStore;
 import com.salesforce.androidsdk.util.EventsObservable.EventType;
@@ -49,7 +49,7 @@ public class SmartStoreExplorerTest extends HybridInstrumentationTestCase {
 		cleanupActivityFollowingLogout();
 	}
 
-    private void sendClick(WebView webView, String target) {
+    private void sendClick(ChromeView webView, String target) {
 		sendJavaScript(webView, "jQuery('" + target + "').trigger('click')");
 	}
 }

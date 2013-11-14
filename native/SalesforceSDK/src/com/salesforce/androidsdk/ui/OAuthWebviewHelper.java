@@ -30,6 +30,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import us.costan.chrome.ChromeCookieManager;
+import us.costan.chrome.ChromeSslErrorHandler;
+import us.costan.chrome.ChromeView;
+import us.costan.chrome.ChromeViewClient;
+import us.costan.chrome.ChromeWebClient;
+
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
@@ -37,11 +43,6 @@ import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.webkit.CookieManager;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.salesforce.androidsdk.R;
@@ -104,7 +105,7 @@ public class OAuthWebviewHelper {
     /**
      * Construct a new OAuthWebviewHelper and perform the initial configuration of the Webview.
      */
-	public OAuthWebviewHelper(OAuthWebviewHelperEvents callback, LoginOptions options, WebView webview, Bundle savedInstanceState) {
+	public OAuthWebviewHelper(OAuthWebviewHelperEvents callback, LoginOptions options, ChromeView webview, Bundle savedInstanceState) {
         assert options != null && callback != null && webview != null;
         this.callback = callback;
         this.loginOptions = options;
@@ -112,8 +113,8 @@ public class OAuthWebviewHelper {
 
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setSavePassword(false);
-        webview.setWebViewClient(makeWebViewClient());
-        webview.setWebChromeClient(makeWebChromeClient());
+        webview.setChromeViewClient(makeWebViewClient());
+        webview.setChromeWebClient(makeWebChromeClient());
 
         // Restore webview's state if available.
         // This ensures the user is not forced to type in credentials again
@@ -128,7 +129,7 @@ public class OAuthWebviewHelper {
 
     private final OAuthWebviewHelperEvents callback;
     protected final LoginOptions loginOptions;
-    private final WebView webview;
+    private final ChromeView webview;
     private AccountOptions accountOptions;
 
     public void saveState(Bundle outState) {
@@ -139,17 +140,13 @@ public class OAuthWebviewHelper {
         }
     }
 
-    public WebView getWebView() {
+    public ChromeView getWebView() {
         return webview;
     }
 
     public void clearCookies() {
-        CookieManager cm = CookieManager.getInstance();
+        ChromeCookieManager cm = ChromeCookieManager.getInstance();
         cm.removeAllCookie();
-    }
-
-    public void clearView() {
-        webview.clearView();
     }
 
     /**
@@ -169,12 +166,12 @@ public class OAuthWebviewHelper {
     }
 
     /** Factory method for the WebViewClient, you can replace this with something else if you need to */
-    protected WebViewClient makeWebViewClient() {
+    protected ChromeViewClient makeWebViewClient() {
     	return new AuthWebViewClient();
     }
     
     /** Factory method for the WebChromeClient, you can replace this with something else if you need to */
-    protected WebChromeClient makeWebChromeClient() {
+    protected ChromeWebClient makeWebChromeClient() {
         return new AuthWebChromeClient();
     }
 
@@ -278,16 +275,16 @@ public class OAuthWebviewHelper {
      * That redirect marks the end of the user facing portion of the authentication flow.
      *
      */
-    protected class AuthWebViewClient extends WebViewClient {
+    protected class AuthWebViewClient extends ChromeViewClient {
 
         @Override
-		public void onPageFinished(WebView view, String url) {
+		public void onPageFinished(ChromeView view, String url) {
         	EventsObservable.get().notifyEvent(EventType.AuthWebViewPageFinished, url);
         	super.onPageFinished(view, url);
 		}
 
 		@Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(ChromeView view, String url) {
 			boolean isDone = url.replace("///", "/").toLowerCase().startsWith(loginOptions.oauthCallbackUrl.replace("///", "/").toLowerCase());
             if (isDone) {
                 Uri callbackUri = Uri.parse(url);
@@ -308,7 +305,7 @@ public class OAuthWebviewHelper {
         }
 
         @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+        public void onReceivedSslError(ChromeView view, ChromeSslErrorHandler handler, SslError error) {
             int primError = error.getPrimaryError();
 
             // Figuring out string resource id
@@ -470,10 +467,10 @@ public class OAuthWebviewHelper {
     /**
      * WebChromeClient used to report back loading progress.
      */
-    protected class AuthWebChromeClient extends WebChromeClient {
+    protected class AuthWebChromeClient extends ChromeWebClient {
 
         @Override
-        public void onProgressChanged(WebView view, int newProgress) {
+        public void onProgressChanged(ChromeView view, int newProgress) {
             callback.onLoadingProgress(newProgress * 100);
         }
     }
