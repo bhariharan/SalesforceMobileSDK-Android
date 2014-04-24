@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, salesforce.com, inc.
+ * Copyright (c) 2014, salesforce.com, inc.
  * All rights reserved.
  * Redistribution and use of this software in source and binary forms, with or
  * without modification, are permitted provided that the following conditions
@@ -26,19 +26,41 @@
  */
 package com.salesforce.samples.restexplorer;
 
-import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.salesforce.androidsdk.app.SalesforceSDKManager;
+import com.salesforce.androidsdk.push.PushNotificationInterface;
 
 /**
- * Application class for the rest explorer app.
+ * Receiver for push notifications in this app.
+ *
+ * @author bhariharan
  */
-public class RestExplorerApp extends Application {
+public class RestExplorerPushReceiver implements PushNotificationInterface {
 
 	@Override
-	public void onCreate() {
-		super.onCreate();
-		SalesforceSDKManager.initNative(getApplicationContext(), new KeyImpl(), ExplorerActivity.class);
-		SalesforceSDKManager.getInstance().setPushNotificationReceiver(new RestExplorerPushReceiver());
+	public void onPushMessageReceived(Bundle message) {
+		Log.e("************", "Message Received: " + message.toString());
+		final Context context = SalesforceSDKManager.getInstance().getAppContext();
+		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		if (message != null) {
+			final String accId = message.getString("Id");
+			final String accName = message.getString("Name");
+			Log.e("************", "User ID: " + message.getString("UserId"));
+			if (!TextUtils.isEmpty(accId) && !TextUtils.isEmpty(accName)) {
+				final String notifMsg = "Account name " + accName + ", (Id: "
+						+ accId + ") updated!";
+				final Notification notification = new Notification(R.drawable.sf__icon,
+						notifMsg, System.currentTimeMillis());
+				notification.setLatestEventInfo(context, "RestExplorer",
+						notifMsg, null);
+				nm.notify(777, notification);
+			}
+		}
 	}
 }
