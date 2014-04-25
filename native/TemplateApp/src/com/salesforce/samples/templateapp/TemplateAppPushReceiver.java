@@ -28,7 +28,9 @@ package com.salesforce.samples.templateapp;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -49,15 +51,27 @@ public class TemplateAppPushReceiver implements PushNotificationInterface {
 		if (message != null) {
 			final String caseId = message.getString("Id");
 			final String caseNumber = message.getString("CaseNumber");
+			final String userId = message.getString("UserId");
 			if (!TextUtils.isEmpty(caseId) && !TextUtils.isEmpty(caseNumber)) {
 				final String notifMsg = "Case number " + caseNumber + ", (Id: "
 						+ caseId + ") updated!";
 				final Notification notification = new Notification(R.drawable.sf__icon,
 						notifMsg, System.currentTimeMillis());
 				notification.setLatestEventInfo(context, "RestExplorer",
-						notifMsg, null);
+						notifMsg, buildPendingIntent(caseId, userId));
 				nm.notify(777, notification);
 			}
 		}
+	}
+
+	/**
+	 * Builds a pending intent that is triggered when the notification is clicked.
+	 *
+	 * @return PendingIntent instance.
+	 */
+	private PendingIntent buildPendingIntent(String caseId, String userId) {
+		final Intent intent = new Intent();
+		final PendingIntent pIntent = PendingIntent.getActivity(SalesforceSDKManager.getInstance().getAppContext(), 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+		return null;
 	}
 }
