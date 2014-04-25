@@ -57,7 +57,7 @@ public class TemplateAppPushReceiver implements PushNotificationInterface {
 						+ caseId + ") updated!";
 				final Notification notification = new Notification(R.drawable.sf__icon,
 						notifMsg, System.currentTimeMillis());
-				notification.setLatestEventInfo(context, "RestExplorer",
+				notification.setLatestEventInfo(context, "TemplateApp",
 						notifMsg, buildPendingIntent(caseId, userId));
 				nm.notify(777, notification);
 			}
@@ -70,8 +70,10 @@ public class TemplateAppPushReceiver implements PushNotificationInterface {
 	 * @return PendingIntent instance.
 	 */
 	private PendingIntent buildPendingIntent(String caseId, String userId) {
-		final Intent intent = new Intent();
-		final PendingIntent pIntent = PendingIntent.getActivity(SalesforceSDKManager.getInstance().getAppContext(), 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-		return null;
+		final Context context = SalesforceSDKManager.getInstance().getAppContext();
+		final Intent intent = new Intent(context, CaseActivity.class);
+		final PendingIntent pIntent = PendingIntent.getActivity(context,
+				0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+		return pIntent;
 	}
 }
