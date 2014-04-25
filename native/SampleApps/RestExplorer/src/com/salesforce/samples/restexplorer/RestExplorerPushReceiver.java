@@ -31,7 +31,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.salesforce.androidsdk.app.SalesforceSDKManager;
 import com.salesforce.androidsdk.push.PushNotificationInterface;
@@ -45,16 +44,14 @@ public class RestExplorerPushReceiver implements PushNotificationInterface {
 
 	@Override
 	public void onPushMessageReceived(Bundle message) {
-		Log.e("************", "Message Received: " + message.toString());
 		final Context context = SalesforceSDKManager.getInstance().getAppContext();
 		final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		if (message != null) {
-			final String accId = message.getString("Id");
-			final String accName = message.getString("Name");
-			Log.e("************", "User ID: " + message.getString("UserId"));
-			if (!TextUtils.isEmpty(accId) && !TextUtils.isEmpty(accName)) {
-				final String notifMsg = "Account name " + accName + ", (Id: "
-						+ accId + ") updated!";
+			final String caseId = message.getString("Id");
+			final String caseNumber = message.getString("CaseNumber");
+			if (!TextUtils.isEmpty(caseId) && !TextUtils.isEmpty(caseNumber)) {
+				final String notifMsg = "Case number " + caseNumber + ", (Id: "
+						+ caseId + ") updated!";
 				final Notification notification = new Notification(R.drawable.sf__icon,
 						notifMsg, System.currentTimeMillis());
 				notification.setLatestEventInfo(context, "RestExplorer",

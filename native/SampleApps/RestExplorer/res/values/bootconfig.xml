@@ -6,5 +6,5 @@
     <string-array name="oauthScopes">
         <item>api</item>
     </string-array>
-    <string name="androidPushNotificationClientId">35123627480</string>
+    <string name="androidPushNotificationClientId">321017030065</string>
 </resources>
