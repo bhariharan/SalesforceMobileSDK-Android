@@ -44,6 +44,9 @@ import com.salesforce.androidsdk.push.PushNotificationInterface;
  */
 public class TemplateAppPushReceiver implements PushNotificationInterface {
 
+	public static final String CASE_ID = "case_id";
+	public static final String USER_ID = "user_id";
+
 	@Override
 	public void onPushMessageReceived(Bundle message) {
 		final Context context = SalesforceSDKManager.getInstance().getAppContext();
@@ -72,6 +75,8 @@ public class TemplateAppPushReceiver implements PushNotificationInterface {
 	private PendingIntent buildPendingIntent(String caseId, String userId) {
 		final Context context = SalesforceSDKManager.getInstance().getAppContext();
 		final Intent intent = new Intent(context, CaseActivity.class);
+		intent.putExtra(CASE_ID, caseId);
+		intent.putExtra(USER_ID, userId);
 		final PendingIntent pIntent = PendingIntent.getActivity(context,
 				0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 		return pIntent;

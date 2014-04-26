@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="account_type">com.salesforce.samples.templateapp.login</string>
 	<string name="app_name"><b>Template</b></string>
@@ -8,4 +9,7 @@
 	<string name="fetch_contacts_button">Fetch Contacts</string>
 	<string name="fetch_accounts_button">Fetch Accounts</string>
 	<string name="clear_button">Clear</string>
+	<string name="case_number">Case Number</string>
+	<string name="case_description">Case Description</string>
+	<string name="user_name">User\'s Name</string>
 </resources>

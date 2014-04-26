@@ -26,7 +26,19 @@
  */
 package com.salesforce.samples.templateapp;
 
+import java.io.UnsupportedEncodingException;
+
+import org.json.JSONArray;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.widget.TextView;
+
 import com.salesforce.androidsdk.rest.RestClient;
+import com.salesforce.androidsdk.rest.RestClient.AsyncRequestCallback;
+import com.salesforce.androidsdk.rest.RestRequest;
+import com.salesforce.androidsdk.rest.RestResponse;
 import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
 
 /**
@@ -37,9 +49,84 @@ import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
 public class CaseActivity extends SalesforceActivity {
 
     private RestClient client;
+    private String caseId;
+    private String userId;
+    private TextView caseNumberView;
+    private TextView caseDescriptionView;
+    private TextView userNameView;
+
+    @Override
+    public void onCreate(Bundle savedInstance) {
+    	super.onCreate(savedInstance);
+    	setContentView(R.layout.case_activity);
+    	final Intent intent = getIntent();
+    	if (intent != null) {
+    		caseId = intent.getStringExtra(TemplateAppPushReceiver.CASE_ID);
+    		userId = intent.getStringExtra(TemplateAppPushReceiver.USER_ID);
+    	}
+    	caseNumberView = (TextView) findViewById(R.id.case_number_view);
+    	caseDescriptionView = (TextView) findViewById(R.id.case_description_view);
+    	userNameView = (TextView) findViewById(R.id.user_name_view);
+    }
 
 	@Override
 	public void onResume(RestClient client) {
 		this.client = client;
+		if (caseId != null) {
+			try {
+				sendRequest("SELECT CaseNumber, Description FROM Case WHERE Id='"
+						+ caseId + "'");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+		if (userId != null) {
+			try {
+				sendRequest("SELECT Name FROM User WHERE Id='" + userId
+						+ "'");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Makes a SOQL request.
+	 *
+	 * @param soql SOQL statement.
+	 * @throws UnsupportedEncodingException
+	 */
+	private void sendRequest(String soql) throws UnsupportedEncodingException {
+		final RestRequest restRequest = RestRequest.getRequestForQuery(getString(R.string.api_version), soql);
+		client.sendAsync(restRequest, new AsyncRequestCallback() {
+
+			@Override
+			public void onSuccess(RestRequest request, RestResponse result) {
+				try {
+					JSONArray records = result.asJSONObject().getJSONArray("records");
+					for (int i = 0; i < records.length(); i++) {
+						final String caseNumber = records.getJSONObject(i).getString("CaseNumber");
+						final String description = records.getJSONObject(i).getString("Description");
+						final String name = records.getJSONObject(i).getString("Name");
+						if (!TextUtils.isEmpty(caseNumber)) {
+							caseNumberView.setText(caseNumber);
+						}
+						if (!TextUtils.isEmpty(description)) {
+							caseDescriptionView.setText(description);
+						}
+						if (!TextUtils.isEmpty(name)) {
+							userNameView.setText(name);
+						}
+					}					
+				} catch (Exception e) {
+					onError(e);
+				}
+			}
+
+			@Override
+			public void onError(Exception exception) {
+				exception.printStackTrace();
+			}
+		});
 	}
 }
