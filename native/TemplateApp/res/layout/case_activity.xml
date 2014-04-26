@@ -24,6 +24,32 @@
 
         <TextView android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:text="@string/case_subject" />
+
+        <TextView android:id="@+id/case_subject_view"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/case_status" />
+
+        <TextView android:id="@+id/case_status_view"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:text="@string/case_description" />
 
         <TextView android:id="@+id/case_description_view"
@@ -40,6 +66,19 @@
             android:text="@string/user_name" />
 
         <TextView android:id="@+id/user_name_view"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/user_email" />
+
+        <TextView android:id="@+id/user_email_view"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content" />
     </LinearLayout>

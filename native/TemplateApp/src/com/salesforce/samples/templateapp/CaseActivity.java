@@ -48,12 +48,24 @@ import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
  */
 public class CaseActivity extends SalesforceActivity {
 
+	private static final String CASE = "Case";
+	private static final String CASE_NUMBER = "CaseNumber";
+	private static final String CASE_SUBJECT = "Subject";
+	private static final String CASE_STATUS = "Status";
+	private static final String CASE_DESCRIPTION = "Description";
+	private static final String USER = "User";
+	private static final String USER_NAME = "Name";
+	private static final String USER_EMAIL = "Email";
+
     private RestClient client;
     private String caseId;
     private String userId;
     private TextView caseNumberView;
+    private TextView caseSubjectView;
+    private TextView caseStatusView;
     private TextView caseDescriptionView;
     private TextView userNameView;
+    private TextView userEmailView;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -65,8 +77,11 @@ public class CaseActivity extends SalesforceActivity {
     		userId = intent.getStringExtra(TemplateAppPushReceiver.USER_ID);
     	}
     	caseNumberView = (TextView) findViewById(R.id.case_number_view);
+    	caseSubjectView = (TextView) findViewById(R.id.case_subject_view);
+    	caseStatusView = (TextView) findViewById(R.id.case_status_view);
     	caseDescriptionView = (TextView) findViewById(R.id.case_description_view);
     	userNameView = (TextView) findViewById(R.id.user_name_view);
+    	userEmailView = (TextView) findViewById(R.id.user_email_view);
     }
 
 	@Override
@@ -74,16 +89,17 @@ public class CaseActivity extends SalesforceActivity {
 		this.client = client;
 		if (caseId != null) {
 			try {
-				sendRequest("SELECT CaseNumber, Description FROM Case WHERE Id='"
-						+ caseId + "'");
+				sendRequest("SELECT " + CASE_NUMBER + ", " + CASE_SUBJECT + ", "
+						+ CASE_STATUS + ", " + CASE_DESCRIPTION + " FROM " + CASE
+						+ " WHERE Id='" + caseId + "'", CASE);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 		}
 		if (userId != null) {
 			try {
-				sendRequest("SELECT Name FROM User WHERE Id='" + userId
-						+ "'");
+				sendRequest("SELECT " + USER_NAME + ", " + USER_EMAIL + " FROM "
+						+ USER + " WHERE Id='" + userId + "'", USER);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -94,9 +110,10 @@ public class CaseActivity extends SalesforceActivity {
 	 * Makes a SOQL request.
 	 *
 	 * @param soql SOQL statement.
+	 * @param sObject Object.
 	 * @throws UnsupportedEncodingException
 	 */
-	private void sendRequest(String soql) throws UnsupportedEncodingException {
+	private void sendRequest(String soql, final String sObject) throws UnsupportedEncodingException {
 		final RestRequest restRequest = RestRequest.getRequestForQuery(getString(R.string.api_version), soql);
 		client.sendAsync(restRequest, new AsyncRequestCallback() {
 
@@ -105,17 +122,32 @@ public class CaseActivity extends SalesforceActivity {
 				try {
 					JSONArray records = result.asJSONObject().getJSONArray("records");
 					for (int i = 0; i < records.length(); i++) {
-						final String caseNumber = records.getJSONObject(i).getString("CaseNumber");
-						final String description = records.getJSONObject(i).getString("Description");
-						final String name = records.getJSONObject(i).getString("Name");
-						if (!TextUtils.isEmpty(caseNumber)) {
-							caseNumberView.setText(caseNumber);
-						}
-						if (!TextUtils.isEmpty(description)) {
-							caseDescriptionView.setText(description);
-						}
-						if (!TextUtils.isEmpty(name)) {
-							userNameView.setText(name);
+						if (CASE.equals(sObject)) {
+							final String caseNumber = records.getJSONObject(i).optString("CaseNumber");
+							final String subject = records.getJSONObject(i).optString("Subject");
+							final String status = records.getJSONObject(i).optString("Status");
+							final String description = records.getJSONObject(i).optString("Description");
+							if (!TextUtils.isEmpty(caseNumber)) {
+								caseNumberView.setText(caseNumber);
+							}
+							if (!TextUtils.isEmpty(subject)) {
+								caseSubjectView.setText(subject);
+							}
+							if (!TextUtils.isEmpty(status)) {
+								caseStatusView.setText(status);
+							}
+							if (!TextUtils.isEmpty(description)) {
+								caseDescriptionView.setText(description);
+							}
+						} else if (USER.equals(sObject)) {
+							final String name = records.getJSONObject(i).optString("Name");
+							final String email = records.getJSONObject(i).optString("Email");
+							if (!TextUtils.isEmpty(name)) {
+								userNameView.setText(name);
+							}
+							if (!TextUtils.isEmpty(email)) {
+								userEmailView.setText(email);
+							}
 						}
 					}					
 				} catch (Exception e) {

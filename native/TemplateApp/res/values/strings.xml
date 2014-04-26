@@ -10,6 +10,9 @@
 	<string name="fetch_accounts_button">Fetch Accounts</string>
 	<string name="clear_button">Clear</string>
 	<string name="case_number">Case Number</string>
+	<string name="case_subject">Case Subject</string>
+	<string name="case_status">Case Status</string>
 	<string name="case_description">Case Description</string>
-	<string name="user_name">User\'s Name</string>
+	<string name="user_name">User Name</string>
+	<string name="user_email">User Email</string>
 </resources>
