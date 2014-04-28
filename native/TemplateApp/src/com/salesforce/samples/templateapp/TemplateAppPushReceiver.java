@@ -55,9 +55,8 @@ public class TemplateAppPushReceiver implements PushNotificationInterface {
 			final String caseId = message.getString("Id");
 			final String caseNumber = message.getString("CaseNumber");
 			final String userId = message.getString("UserId");
-			if (!TextUtils.isEmpty(caseId) && !TextUtils.isEmpty(caseNumber)) {
-				final String notifMsg = "Case number " + caseNumber + ", (Id: "
-						+ caseId + ") updated!";
+			if (!TextUtils.isEmpty(caseNumber)) {
+				final String notifMsg = "Case number " + caseNumber + " updated!";
 				final Notification notification = new Notification(R.drawable.sf__icon,
 						notifMsg, System.currentTimeMillis());
 				notification.setLatestEventInfo(context, "TemplateApp",
