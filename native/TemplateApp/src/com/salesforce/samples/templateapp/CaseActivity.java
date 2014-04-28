@@ -27,6 +27,7 @@
 package com.salesforce.samples.templateapp;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import org.json.JSONArray;
 
@@ -35,6 +36,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.TextView;
 
+import com.salesforce.androidsdk.accounts.UserAccount;
+import com.salesforce.androidsdk.accounts.UserAccountManager;
+import com.salesforce.androidsdk.app.SalesforceSDKManager;
+import com.salesforce.androidsdk.rest.ClientManager;
+import com.salesforce.androidsdk.rest.ClientManager.LoginOptions;
+import com.salesforce.androidsdk.rest.ClientManager.RestClientCallback;
 import com.salesforce.androidsdk.rest.RestClient;
 import com.salesforce.androidsdk.rest.RestClient.AsyncRequestCallback;
 import com.salesforce.androidsdk.rest.RestRequest;
@@ -87,6 +94,18 @@ public class CaseActivity extends SalesforceActivity {
 	@Override
 	public void onResume(RestClient client) {
 		this.client = client;
+		final UserAccountManager userAccMgr = SalesforceSDKManager.getInstance().getUserAccountManager();
+		if (!TextUtils.isEmpty(userId) && !userId.equals(userAccMgr.getCurrentUser().getUserId())) {
+			final List<UserAccount> userAccounts = userAccMgr.getAuthenticatedUsers();
+			if (userAccounts != null) {
+				for (final UserAccount account : userAccounts) {
+					if (account != null && userId.equals(account.getUserId())) {
+						userAccMgr.switchToUser(account);
+						switchUser();
+					}
+				}
+			}
+		}
 		if (caseId != null) {
 			try {
 				sendRequest("SELECT " + CASE_NUMBER + ", " + CASE_SUBJECT + ", "
@@ -103,6 +122,33 @@ public class CaseActivity extends SalesforceActivity {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * Switches user.
+	 */
+	private void switchUser() {
+		if (SalesforceSDKManager.getInstance().getPasscodeManager().onResume(this)) {
+
+			// Gets login options.
+			final String accountType = SalesforceSDKManager.getInstance().getAccountType();
+	    	final LoginOptions loginOptions = SalesforceSDKManager.getInstance().getLoginOptions();
+
+			// Gets a rest client.
+			new ClientManager(this, accountType, loginOptions,
+					SalesforceSDKManager.getInstance().shouldLogoutWhenTokenRevoked()).getRestClient(this,
+					new RestClientCallback() {
+
+				@Override
+				public void authenticatedRestClient(RestClient client) {
+					if (client == null) {
+						SalesforceSDKManager.getInstance().logout(CaseActivity.this);
+						return;
+					}
+					onResume(client);
+				}
+			});
 		}
 	}
 

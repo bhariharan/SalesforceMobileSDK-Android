@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -51,7 +52,7 @@ public class MainActivity extends SalesforceActivity {
 
     private RestClient client;
     private ArrayAdapter<String> listAdapter;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,7 +90,19 @@ public class MainActivity extends SalesforceActivity {
 	public void onLogoutClick(View v) {
 		SalesforceSDKManager.getInstance().logout(this);
 	}
-	
+
+	/**
+	 * Called when "Switch User" button is clicked.
+	 *
+	 * @param v View that was clicked.
+	 */
+	public void onSwitchUserClick(View v) {
+		final Intent i = new Intent(this,
+				SalesforceSDKManager.getInstance().getAccountSwitcherActivityClass());
+		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		this.startActivity(i);
+	}
+
 	/**
 	 * Called when "Clear" button is clicked. 
 	 * 

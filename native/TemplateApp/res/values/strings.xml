@@ -15,4 +15,5 @@
 	<string name="case_description">Case Description</string>
 	<string name="user_name">User Name</string>
 	<string name="user_email">User Email</string>
+	<string name="switch_user_button">Switch User</string>
 </resources>
