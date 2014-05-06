@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, salesforce.com, inc.
+ * Copyright (c) 2014, salesforce.com, inc.
  * All rights reserved.
  * Redistribution and use of this software in source and binary forms, with or
  * without modification, are permitted provided that the following conditions
@@ -46,7 +46,7 @@ import com.salesforce.androidsdk.rest.RestResponse;
 import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
 
 /**
- * Main activity
+ * Main activity.
  */
 public class MainActivity extends SalesforceActivity {
 
@@ -57,35 +57,37 @@ public class MainActivity extends SalesforceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Setup view
+		// Setup view.
 		setContentView(R.layout.main);
 	}
-	
+
 	@Override 
 	public void onResume() {
-		// Hide everything until we are logged in
+
+		// Hide everything until we are logged in.
 		findViewById(R.id.root).setVisibility(View.INVISIBLE);
 
-		// Create list adapter
-		listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
-		((ListView) findViewById(R.id.contacts_list)).setAdapter(listAdapter);				
-		
+		// Create list adapter.
+		listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+				new ArrayList<String>());
+		((ListView) findViewById(R.id.cases_list)).setAdapter(listAdapter);	
 		super.onResume();
-	}		
-	
+	}
+
 	@Override
 	public void onResume(RestClient client) {
-        // Keeping reference to rest client
+
+        // Keeping reference to rest client.
         this.client = client; 
 
-		// Show everything
+		// Show everything.
 		findViewById(R.id.root).setVisibility(View.VISIBLE);
 	}
 
 	/**
-	 * Called when "Logout" button is clicked. 
-	 * 
-	 * @param v
+	 * Called when "Logout" button is clicked.
+	 *
+	 * @param v View that was clicked.
 	 */
 	public void onLogoutClick(View v) {
 		SalesforceSDKManager.getInstance().logout(this);
@@ -104,56 +106,46 @@ public class MainActivity extends SalesforceActivity {
 	}
 
 	/**
-	 * Called when "Clear" button is clicked. 
+	 * Called when "Clear" button is clicked.
 	 * 
-	 * @param v
+	 * @param v View that was clicked.
 	 */
 	public void onClearClick(View v) {
 		listAdapter.clear();
 	}	
 
 	/**
-	 * Called when "Fetch Contacts" button is clicked
-	 * 
-	 * @param v
-	 * @throws UnsupportedEncodingException 
+	 * Called when "Fetch Cases" button is clicked.
+	 *
+	 * @param v View that was clicked.
 	 */
-	public void onFetchContactsClick(View v) throws UnsupportedEncodingException {
-        sendRequest("SELECT Name FROM Contact");
+	public void onFetchCasesClick(View v) throws UnsupportedEncodingException {
+        sendRequest("SELECT CaseNumber FROM Case WHERE OwnerId = '"
+        		+ client.getClientInfo().userId + "'");
 	}
 
-	/**
-	 * Called when "Fetch Accounts" button is clicked
-	 * 
-	 * @param v
-	 * @throws UnsupportedEncodingException 
-	 */
-	public void onFetchAccountsClick(View v) throws UnsupportedEncodingException {
-		sendRequest("SELECT Name FROM Account");
-	}	
-	
 	private void sendRequest(String soql) throws UnsupportedEncodingException {
-		RestRequest restRequest = RestRequest.getRequestForQuery(getString(R.string.api_version), soql);
-
+		final RestRequest restRequest = RestRequest.getRequestForQuery(getString(R.string.api_version), soql);
 		client.sendAsync(restRequest, new AsyncRequestCallback() {
+
 			@Override
 			public void onSuccess(RestRequest request, RestResponse result) {
 				try {
 					listAdapter.clear();
 					JSONArray records = result.asJSONObject().getJSONArray("records");
 					for (int i = 0; i < records.length(); i++) {
-						listAdapter.add(records.getJSONObject(i).getString("Name"));
-					}					
+						listAdapter.add(records.getJSONObject(i).getString("CaseNumber"));
+					}		
 				} catch (Exception e) {
 					onError(e);
 				}
 			}
-			
+
 			@Override
 			public void onError(Exception exception) {
                 Toast.makeText(MainActivity.this,
-                               MainActivity.this.getString(SalesforceSDKManager.getInstance().getSalesforceR().stringGenericError(), exception.toString()),
-                               Toast.LENGTH_LONG).show();
+                		MainActivity.this.getString(SalesforceSDKManager.getInstance().getSalesforceR().stringGenericError(), exception.toString()),
+                        Toast.LENGTH_LONG).show();
 			}
 		});
 	}
