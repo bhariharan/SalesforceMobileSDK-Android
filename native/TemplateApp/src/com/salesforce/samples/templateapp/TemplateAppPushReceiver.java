@@ -26,6 +26,8 @@
  */
 package com.salesforce.samples.templateapp;
 
+import java.util.Random;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -46,6 +48,7 @@ public class TemplateAppPushReceiver implements PushNotificationInterface {
 
 	public static final String CASE_ID = "case_id";
 	public static final String USER_ID = "user_id";
+	public static final String NOTIFICATION_ID = "notification_id";
 
 	@Override
 	public void onPushMessageReceived(Bundle message) {
@@ -57,11 +60,13 @@ public class TemplateAppPushReceiver implements PushNotificationInterface {
 			final String userId = message.getString("UserId");
 			if (!TextUtils.isEmpty(caseNumber)) {
 				final String notifMsg = "Case number " + caseNumber + " updated!";
+				final Random gen = new Random();
+				int notifId = gen.nextInt();
 				final Notification notification = new Notification(R.drawable.sf__icon,
 						notifMsg, System.currentTimeMillis());
 				notification.setLatestEventInfo(context, "TemplateApp",
-						notifMsg, buildPendingIntent(caseId, userId));
-				nm.notify(777, notification);
+						notifMsg, buildPendingIntent(caseId, userId, notifId));
+				nm.notify(notifId, notification);
 			}
 		}
 	}
@@ -69,13 +74,17 @@ public class TemplateAppPushReceiver implements PushNotificationInterface {
 	/**
 	 * Builds a pending intent that is triggered when the notification is clicked.
 	 *
+	 * @param caseId Case ID.
+	 * @param userId User ID.
+	 * @param notifId Notification ID.
 	 * @return PendingIntent instance.
 	 */
-	private PendingIntent buildPendingIntent(String caseId, String userId) {
+	private PendingIntent buildPendingIntent(String caseId, String userId, int notifId) {
 		final Context context = SalesforceSDKManager.getInstance().getAppContext();
 		final Intent intent = new Intent(context, CaseActivity.class);
 		intent.putExtra(CASE_ID, caseId);
 		intent.putExtra(USER_ID, userId);
+		intent.putExtra(NOTIFICATION_ID, notifId);
 		final PendingIntent pIntent = PendingIntent.getActivity(context,
 				0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
 		return pIntent;

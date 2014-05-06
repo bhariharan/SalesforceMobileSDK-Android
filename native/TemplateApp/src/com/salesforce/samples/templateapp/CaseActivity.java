@@ -31,6 +31,8 @@ import java.util.List;
 
 import org.json.JSONArray;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -67,6 +69,7 @@ public class CaseActivity extends SalesforceActivity {
     private RestClient client;
     private String caseId;
     private String userId;
+    private int notifId;
     private TextView caseNumberView;
     private TextView caseSubjectView;
     private TextView caseStatusView;
@@ -82,6 +85,11 @@ public class CaseActivity extends SalesforceActivity {
     	if (intent != null) {
     		caseId = intent.getStringExtra(TemplateAppPushReceiver.CASE_ID);
     		userId = intent.getStringExtra(TemplateAppPushReceiver.USER_ID);
+    		notifId = intent.getIntExtra(TemplateAppPushReceiver.NOTIFICATION_ID, 0);
+    		if (notifId != 0) {
+        		final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        		nm.cancel(notifId);
+    		}
     	}
     	caseNumberView = (TextView) findViewById(R.id.case_number_view);
     	caseSubjectView = (TextView) findViewById(R.id.case_subject_view);
