@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/white" />
+
+    <TextView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/case_info_title"
+        android:gravity="center"
+        android:layout_margin="4dp" />
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/white" />
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:padding="8dp">
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:text="@string/case_number"
+            android:layout_weight="1" />
+
+        <TextView android:id="@+id/case_number_view"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:padding="8dp">
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:text="@string/case_subject"
+            android:layout_weight="1" />
+
+        <EditText android:id="@+id/case_subject_view"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="right"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:padding="8dp">
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:text="@string/case_status"
+            android:layout_weight="1" />
+
+        <TextView android:id="@+id/case_status_view"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="right" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:padding="8dp">
+
+        <TextView android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:text="@string/case_description"
+            android:layout_weight="1" />
+
+        <EditText android:id="@+id/case_description_view"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:gravity="right"
+            android:inputType="textMultiLine" />
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/white" />
+
+    <Button android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/save"
+        android:onClick="onSaveClicked" />
+</LinearLayout>

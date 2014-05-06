@@ -34,8 +34,11 @@ import org.json.JSONArray;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.salesforce.androidsdk.app.SalesforceSDKManager;
@@ -50,8 +53,11 @@ import com.salesforce.androidsdk.ui.sfnative.SalesforceActivity;
  */
 public class MainActivity extends SalesforceActivity {
 
+	public static final String CASE_ID_KEY = "case_id";
+
     private RestClient client;
     private ArrayAdapter<String> listAdapter;
+    private ListView list;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,7 @@ public class MainActivity extends SalesforceActivity {
 
 		// Setup view.
 		setContentView(R.layout.main);
+		list = (ListView) findViewById(R.id.cases_list);
 	}
 
 	@Override 
@@ -70,15 +77,25 @@ public class MainActivity extends SalesforceActivity {
 		// Create list adapter.
 		listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
 				new ArrayList<String>());
-		((ListView) findViewById(R.id.cases_list)).setAdapter(listAdapter);	
+		list.setAdapter(listAdapter);
 		super.onResume();
+		list.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+            public void onItemClick(AdapterView<?> parent, View view,
+            		int position, long id) {
+                final Intent i = new Intent(MainActivity.this, CaseEditActivity.class);
+                i.putExtra(CASE_ID_KEY, ((TextView) parent.getChildAt(position)).getText());
+                startActivity(i);
+            }
+		});
 	}
 
 	@Override
 	public void onResume(RestClient client) {
 
         // Keeping reference to rest client.
-        this.client = client; 
+        this.client = client;
 
 		// Show everything.
 		findViewById(R.id.root).setVisibility(View.VISIBLE);
