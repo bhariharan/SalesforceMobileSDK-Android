@@ -15,8 +15,7 @@
 
 		<!-- Launcher screen -->
 		<activity android:name=".MainActivity"
-		    android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+		    android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -25,8 +24,7 @@
 
 		<!-- Case screen -->
         <activity android:name=".CaseActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:label="@string/app_name">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -34,8 +32,7 @@
 
         <!-- Case edit screen -->
         <activity android:name=".CaseEditActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:label="@string/app_name">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
