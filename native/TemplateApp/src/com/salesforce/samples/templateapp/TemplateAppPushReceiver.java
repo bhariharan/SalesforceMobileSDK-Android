@@ -82,11 +82,12 @@ public class TemplateAppPushReceiver implements PushNotificationInterface {
 	private PendingIntent buildPendingIntent(String caseId, String userId, int notifId) {
 		final Context context = SalesforceSDKManager.getInstance().getAppContext();
 		final Intent intent = new Intent(context, CaseActivity.class);
+		intent.setAction(Long.toString(System.currentTimeMillis()));
 		intent.putExtra(CASE_ID, caseId);
 		intent.putExtra(USER_ID, userId);
 		intent.putExtra(NOTIFICATION_ID, notifId);
 		final PendingIntent pIntent = PendingIntent.getActivity(context,
-				0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+				0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		return pIntent;
 	}
 }
