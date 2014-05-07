@@ -154,7 +154,24 @@ public class CaseActivity extends SalesforceActivity {
 						SalesforceSDKManager.getInstance().logout(CaseActivity.this);
 						return;
 					}
-					onResume(client);
+					CaseActivity.this.client = client;
+					if (caseId != null) {
+						try {
+							sendRequest("SELECT " + CASE_NUMBER + ", " + CASE_SUBJECT + ", "
+									+ CASE_STATUS + ", " + CASE_DESCRIPTION + " FROM " + CASE
+									+ " WHERE Id='" + caseId + "'", CASE);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+					}
+					if (userId != null) {
+						try {
+							sendRequest("SELECT " + USER_NAME + ", " + USER_EMAIL + " FROM "
+									+ USER + " WHERE Id='" + userId + "'", USER);
+						} catch (UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 			});
 		}
