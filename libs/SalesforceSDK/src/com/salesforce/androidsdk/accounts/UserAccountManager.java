@@ -153,9 +153,9 @@ public class UserAccountManager {
         if (accounts == null || accounts.length == 0) {
         	return null;
         }
-
+		return accounts[0];
         // Reads the stored user ID and org ID.
-        final SharedPreferences sp = context.getSharedPreferences(CURRENT_USER_PREF,
+        /*final SharedPreferences sp = context.getSharedPreferences(CURRENT_USER_PREF,
 				Context.MODE_PRIVATE);
         final String storedUserId = sp.getString(USER_ID_KEY, "");
         final String storedOrgId = sp.getString(ORG_ID_KEY, "");
@@ -174,7 +174,7 @@ public class UserAccountManager {
         		}
         	}
         }
-		return null;
+		return null;*/
 	}
 
 	/**

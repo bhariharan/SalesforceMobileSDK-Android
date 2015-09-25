@@ -52,7 +52,8 @@ public class UUIDManager {
     private static Map<String, String> uuids = new HashMap<String, String>();
     
     public static synchronized String getUuId(String name) {
-    	String cached = uuids.get(name);
+        return name;
+    	/*String cached = uuids.get(name);
     	if (cached != null) return cached;
         SharedPreferences sp = SalesforceSDKManager.getInstance().getAppContext().getSharedPreferences(UUID_PREF, Context.MODE_PRIVATE);
         String key = SalesforceSDKManager.getInstance().getKey(name);
@@ -65,7 +66,7 @@ public class UUIDManager {
         cached = Encryptor.decrypt(sp.getString(name, null), key);
         if (cached != null)
         	uuids.put(name, cached);
-        return cached;
+        return cached;*/
     }	
     
     /**
