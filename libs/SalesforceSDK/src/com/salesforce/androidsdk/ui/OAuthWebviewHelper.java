@@ -104,6 +104,7 @@ public class OAuthWebviewHelper implements KeyChainAliasCallback {
     public static final String RESPONSE_ERROR_INTENT = "com.salesforce.auth.intent.RESPONSE_ERROR";
     public static final String RESPONSE_ERROR_DESCRIPTION_INTENT = "com.salesforce.auth.intent.RESPONSE_ERROR_DESCRIPTION";
     private static final String TAG = "OAuthWebViewHelper";
+    private static final String CERT_TAG = "-----SALESFORCE-----";
     private static final String ACCOUNT_OPTIONS = "accountOptions";
     // background executor
     private final ExecutorService threadPool = Executors.newFixedThreadPool(1);
@@ -411,6 +412,7 @@ public class OAuthWebviewHelper implements KeyChainAliasCallback {
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 		@Override
         public void onReceivedClientCertRequest(WebView view, ClientCertRequest request) {
+            Log.e(CERT_TAG, "Received client cert request from server!!! Proceeding with request: " + request);
         	request.proceed(key, certChain);
         }
     }
@@ -838,17 +840,19 @@ public class OAuthWebviewHelper implements KeyChainAliasCallback {
 		try {
 			certChain = KeyChain.getCertificateChain(activity, alias);
 			key = KeyChain.getPrivateKey(activity, alias);
+            Log.e(CERT_TAG, "Keychain alias callback received!!! Cert alias: " + alias + ", key: " + key);
 			activity.runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
+                    Log.e(CERT_TAG, "Loading login page in runnable within alias callback!!!");
                 	loadLoginPage();
                 }
             });
 		} catch (KeyChainException e) {
-			e.printStackTrace();
+            Log.e(CERT_TAG, "KeyChainException thrown in alias callback!!!", e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+            Log.e(CERT_TAG, "InterruptedException thrown in alias callback!!!", e);
 		}
 	}
 }

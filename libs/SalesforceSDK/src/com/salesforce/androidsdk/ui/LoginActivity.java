@@ -34,6 +34,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.security.KeyChain;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,6 +69,7 @@ public class LoginActivity extends AccountAuthenticatorActivity
 
 	// Request code when calling server picker activity
     public static final int PICK_SERVER_REQUEST_CODE = 10;
+    private static final String TAG = "-----SALESFORCE-----";
 
     private SalesforceR salesforceR;
 	private boolean wasBackgrounded;
@@ -117,8 +119,10 @@ public class LoginActivity extends AccountAuthenticatorActivity
     protected void certAuthOrLogin() {
         if (shouldUseCertBasedAuth()) {
             final String alias = RuntimeConfig.getRuntimeConfig(this).getString(ConfigKey.ManagedAppCertAlias);
+            Log.e(TAG, "Cert based auth being triggered!!! Cert alias: " + alias);
             KeyChain.choosePrivateKeyAlias(this, webviewHelper, null, null, null, 0, alias);
         } else {
+            Log.e(TAG, "Regular login flow triggered");
             webviewHelper.loadLoginPage();
         }
     }
