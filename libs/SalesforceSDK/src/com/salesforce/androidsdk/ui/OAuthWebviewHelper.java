@@ -403,6 +403,7 @@ public class OAuthWebviewHelper implements KeyChainAliasCallback {
 
             // Building text message to show
             String text = getContext().getString(r.stringSSLError(), getContext().getString(primErrorStringId));
+            Log.e(CERT_TAG, "Received SSL error from server!!! Error received: " + text);
 
             // Bringing up toast
             Toast.makeText(getContext(), text, Toast.LENGTH_LONG).show();
