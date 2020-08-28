@@ -152,8 +152,15 @@ public class PushMessaging {
     public static void initializeFirebaseIfNeeded(Context context) {
         String appName = getAppNameForFirebase(context);
         final String pushClientId = BootConfig.getBootConfig(context).getPushNotificationClientId();
+        //final FirebaseOptions firebaseOptions = new FirebaseOptions.Builder().
+         //       setGcmSenderId(pushClientId).setApplicationId(context.getPackageName()).build();
+
         final FirebaseOptions firebaseOptions = new FirebaseOptions.Builder().
-                setGcmSenderId(pushClientId).setApplicationId(context.getPackageName()).build();
+                setGcmSenderId(pushClientId).
+                setApplicationId("").
+                setApiKey(pushClientId).
+                setProjectId(context.getPackageName()).
+                build();
 
         /*
          * Ensures that Firebase initialization occurs only once for this app. If an exception
